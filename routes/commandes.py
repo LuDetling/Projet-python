@@ -24,14 +24,12 @@ def liste_commandes(request: Request, db: Session = Depends(get_db)):
 def creer_commande(
     request: Request,
     db: Session = Depends(get_db),
-    reference: str = Form(...),
     client_id: int = Form(...),
     montant_total: float = Form(...),
     statut: str = Form("CREEE")
 ): 
     commande_service.create(
         db,
-        reference=reference,
         client_id=client_id,
         montant_total=montant_total,
         statut=StatutCommande[statut]
@@ -40,9 +38,31 @@ def creer_commande(
     clients = client_service.get_all(db)
     return templates.TemplateResponse(
         request=request,
-        name="commandes/liste.html",
+        name="commandes/_liste.html",
         context={
             "commandes": commandes,
             "clients": clients
+        }
+    )
+    
+@router.patch("/{commande_id}/statut", response_class=HTMLResponse)
+def modifier_statut(
+    request: Request,
+    commande_id: int,
+    statut: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    commande_service.modifier_statut(
+        db,
+        Commande_id=commande_id,
+        statut=StatutCommande[statut]
+    )
+    commandes = commande_service.get_all(db)
+    
+    return templates.TemplateResponse(
+        request=request,
+        name="commandes/_liste.html",
+        context={
+            "commandes": commandes
         }
     )

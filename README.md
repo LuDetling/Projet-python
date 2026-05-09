@@ -1,5 +1,9 @@
 # Mini app
 
+# Prérequis
+
+Python
+
 # Lancer le serveur
 
 .\venv\Scripts\Activate.ps1

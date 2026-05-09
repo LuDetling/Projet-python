@@ -17,7 +17,7 @@
         <form hx-post="/clients/"
               hx-target="#liste-clients"
               hx-swap="innerHTML"
-              hx-on::after-request="modal_client.close()">
+              hx-on::after-request="if(event.detail.successful) modal_commande.close()">
             <div class="form-control mb-3">
                 <label class="label"><span class="label-text">Nom</span></label>
                 <input name="nom" type="text" placeholder="Jean Dupont"

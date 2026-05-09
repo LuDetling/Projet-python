@@ -1,8 +1,11 @@
-from sqlalchemy import create_engine
+from fastapi import Depends
 from sqlalchemy.orm import Session
 from database import Base ,engine
 from models.client import Client
 from models.commande import Commande, StatutCommande
+from services.commande_service import generer_ref
+from database import get_db
+
 
 with Session(engine) as session:
     try:
@@ -12,9 +15,11 @@ with Session(engine) as session:
             telephone='0668372876',
             adresse='51 avenue de la république, 37100, Tours'
         )
+        db: Session = Depends(get_db)
+        reference = generer_ref(db)
         
         nouvelle_commande = Commande(
-            reference='CMD-2026-01',
+            reference=reference,
             montant_total=137.95,
             statut= StatutCommande.CONFIRMEE,
             client=nouveau_client

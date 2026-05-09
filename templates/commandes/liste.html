@@ -13,16 +13,8 @@
 <dialog id="modal_commande" class="modal">
     <div class="modal-box">
         <h3 class="text-lg font-bold mb-4">Nouvelle commande</h3>
-        <form hx-post="/commandes/"
-              hx-target="#liste-commandes"
-              hx-swap="innerHTML"
-              hx-on::after-request="modal_commande.close()">
-
-            <div class="form-control mb-3">
-                <label class="label"><span class="label-text">Référence</span></label>
-                <input name="reference" type="text" placeholder="CMD-2024-001"
-                       class="input input-bordered" required>
-            </div>
+        <form hx-post="/commandes/" hx-target="#liste-commandes" hx-swap="innerHTML"
+            hx-on::after-request="if(event.detail.successful) modal_commande.close()">
 
             <div class="form-control mb-3">
                 <label class="label"><span class="label-text">Client</span></label>
@@ -36,8 +28,8 @@
 
             <div class="form-control mb-3">
                 <label class="label"><span class="label-text">Montant total (€)</span></label>
-                <input name="montant_total" type="number" step="0.01" min="0"
-                       placeholder="0.00" class="input input-bordered" required>
+                <input name="montant_total" type="number" step="0.01" min="0" placeholder="0.00"
+                    class="input input-bordered" required>
             </div>
 
             <div class="form-control mb-4">
@@ -52,8 +44,7 @@
             </div>
 
             <div class="modal-action">
-                <button type="button" onclick="modal_commande.close()"
-                        class="btn btn-ghost">Annuler</button>
+                <button type="button" onclick="modal_commande.close()" class="btn btn-ghost">Annuler</button>
                 <button type="submit" class="btn btn-primary">Créer</button>
             </div>
         </form>
@@ -87,25 +78,32 @@
                     <td>{{ commande.client.nom }}</td>
                     <td>{{ "%.2f"|format(commande.montant_total) }} €</td>
                     <td>
-                        {% if commande.statut.name == "CREEE" %}
-                            <span class="badge badge-ghost">{{ commande.statut.value }}</span>
-                        {% elif commande.statut.name == "CONFIRMEE" %}
-                            <span class="badge badge-info">{{ commande.statut.value }}</span>
-                        {% elif commande.statut.name == "EXPEDIEE" %}
-                            <span class="badge badge-warning">{{ commande.statut.value }}</span>
-                        {% elif commande.statut.name == "LIVREE" %}
-                            <span class="badge badge-success">{{ commande.statut.value }}</span>
-                        {% elif commande.statut.name == "ANNULEE" %}
-                            <span class="badge badge-error">{{ commande.statut.value }}</span>
-                        {% endif %}
+                        <select class="select select-bordered select-xs w-36" name="statut"
+                            hx-patch="/commandes/{{ commande.id }}/statut" hx-target="#liste-commandes"
+                            hx-swap="innerHTML" hx-include="this" hx-trigger="change">
+
+                            <option value="CREEE" {% if commande.statut.name=="CREEE" %}selected{% endif %}>
+                                Créée
+                            </option>
+                            <option value="CONFIRMEE" {% if commande.statut.name=="CONFIRMEE" %}selected{% endif %}>
+                                Confirmée
+                            </option>
+                            <option value="EXPEDIEE" {% if commande.statut.name=="EXPEDIEE" %}selected{% endif %}>
+                                Expédiée
+                            </option>
+                            <option value="LIVREE" {% if commande.statut.name=="LIVREE" %}selected{% endif %}>
+                                Livrée
+                            </option>
+                            <option value="ANNULEE" {% if commande.statut.name=="ANNULEE" %}selected{% endif %}>
+                                Annulée
+                            </option>
+                        </select>
                     </td>
                     <td>{{ commande.date_commande.strftime("%d/%m/%Y %H:%M") }}</td>
                     <td>
-                        <button class="btn btn-error btn-xs"
-                                hx-delete="/commandes/{{ commande.id }}"
-                                hx-target="#commande-{{ commande.id }}"
-                                hx-swap="outerHTML"
-                                hx-confirm="Supprimer la commande {{ commande.reference }} ?">
+                        <button class="btn btn-error btn-xs" hx-delete="/commandes/{{ commande.id }}"
+                            hx-target="#commande-{{ commande.id }}" hx-swap="outerHTML"
+                            hx-confirm="Supprimer la commande {{ commande.reference }} ?">
                             Supprimer
                         </button>
                     </td>

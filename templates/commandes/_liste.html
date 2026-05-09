@@ -1,0 +1,61 @@
+{% if commandes %}
+<div class="overflow-x-auto">
+    <table class="table table-zebra bg-base-100 rounded-xl shadow">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Référence</th>
+                <th>Client</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commande in commandes %}
+            <tr id="commande-{{ commande.id }}">
+                <td>{{ commande.id }}</td>
+                <td class="font-mono font-medium">{{ commande.reference }}</td>
+                <td>{{ commande.client.nom }}</td>
+                <td>{{ "%.2f"|format(commande.montant_total) }} €</td>
+                <td>
+                    <select class="select select-bordered select-xs w-36" name="statut"
+                        hx-patch="/commandes/{{ commande.id }}/statut" hx-target="#liste-commandes" hx-swap="innerHTML"
+                        hx-include="this" hx-trigger="change">
+
+                        <option value="CREEE" {% if commande.statut.name=="CREEE" %}selected{% endif %}>
+                            Créée
+                        </option>
+                        <option value="CONFIRMEE" {% if commande.statut.name=="CONFIRMEE" %}selected{% endif %}>
+                            Confirmée
+                        </option>
+                        <option value="EXPEDIEE" {% if commande.statut.name=="EXPEDIEE" %}selected{% endif %}>
+                            Expédiée
+                        </option>
+                        <option value="LIVREE" {% if commande.statut.name=="LIVREE" %}selected{% endif %}>
+                            Livrée
+                        </option>
+                        <option value="ANNULEE" {% if commande.statut.name=="ANNULEE" %}selected{% endif %}>
+                            Annulée
+                        </option>
+                    </select>
+                </td>
+                <td>{{ commande.date_commande.strftime("%d/%m/%Y %H:%M") }}</td>
+                <td>
+                    <button class="btn btn-error btn-xs" hx-delete="/commandes/{{ commande.id }}"
+                        hx-target="#commande-{{ commande.id }}" hx-swap="outerHTML"
+                        hx-confirm="Supprimer {{ commande.reference }} ?">
+                        Supprimer
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    <span>Aucune commande pour l'instant. Créez-en une !</span>
+</div>
+{% endif %}

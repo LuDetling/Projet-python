@@ -29,6 +29,6 @@ def creer_client(
     clients = client_service.get_all(db)
     return templates.TemplateResponse(
         request=request,
-        name="clients/liste.html",
+        name="clients/_liste.html",
         context={"clients": clients}
     )
