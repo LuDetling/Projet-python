@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Commandes</h1>
+
+<!-- Formulaire HTMX : POST sans rechargement, remplace #liste-commandes -->
+<form hx-post="/commandes/"
+      hx-target="#liste-commandes"
+      hx-swap="innerHTML">
+    <input name="nom" placeholder="Nom" required>
+    <input name="email" type="email" placeholder="Email" required>
+    <input name="telephone" placeholder="Téléphone">
+    <button type="submit">Ajouter</button>
+</form>
+
+<div id="liste-commandes">
+    {% for commande in commandes %}
+    <div class="card">
+        <strong>{{ commande.reference }}</strong> — 
+        <button hx-delete="/commandes/{{ commande.id }}"
+                hx-target="closest .card"
+                hx-swap="outerHTML">
+            Supprimer
+        </button>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

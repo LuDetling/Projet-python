@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Clients</h1>
+
+<!-- Formulaire HTMX : POST sans rechargement, remplace #liste-clients -->
+<form hx-post="/clients/"
+      hx-target="#liste-clients"
+      hx-swap="innerHTML">
+    <input name="nom" placeholder="Nom" required>
+    <input name="email" type="email" placeholder="Email" required>
+    <input name="telephone" placeholder="Téléphone">
+    <button type="submit">Ajouter</button>
+</form>
+
+<div id="liste-clients">
+    {% for client in clients %}
+    <div class="card">
+        <strong>{{ client.nom }}</strong> — {{ client.email }}
+        <button hx-delete="/clients/{{ client.id }}"
+                hx-target="closest .card"
+                hx-swap="outerHTML">
+            Supprimer
+        </button>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

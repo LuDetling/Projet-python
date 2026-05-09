@@ -1,0 +1,2 @@
+sqlalchemy
+ORM pour la base de donnée y a juste a créer les class puis avec la fonction create_engine 

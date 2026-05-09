@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mon App{% endblock %}</title>
+    <!-- HTMX : permet de faire des requêtes sans rechargement de page -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav>
+        <a href="/clients">Clients</a>
+        <a href="/commandes">Commandes</a>
+    </nav>
+    <main>{% block content %}{% endblock %}</main>
+</body>
+</html>
