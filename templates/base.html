@@ -1,17 +1,35 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Mon App{% endblock %}</title>
-    <!-- HTMX : permet de faire des requêtes sans rechargement de page -->
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4/dist/full.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
-    <nav>
-        <a href="/clients">Clients</a>
-        <a href="/commandes">Commandes</a>
-    </nav>
-    <main>{% block content %}{% endblock %}</main>
+
+<body class="bg-base-200 min-h-screen">
+
+    <!-- Navbar -->
+    <div class="navbar bg-base-100 shadow-sm">
+        <div class="navbar-start">
+            <a href="/" class="btn btn-ghost text-xl">🛒 MonApp</a>
+        </div>
+        <div class="navbar-end">
+            <a href="/clients" class="btn btn-ghost">Clients</a>
+            <a href="/commandes" class="btn btn-ghost">Commandes</a>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <main class="container mx-auto p-6">
+        {% block content %}{% endblock %}
+    </main>
+
 </body>
+
 </html>

@@ -1,27 +1,124 @@
 {% extends "base.html" %}
+{% block title %}Commandes{% endblock %}
 {% block content %}
-<h1>Commandes</h1>
 
-<!-- Formulaire HTMX : POST sans rechargement, remplace #liste-commandes -->
-<form hx-post="/commandes/"
-      hx-target="#liste-commandes"
-      hx-swap="innerHTML">
-    <input name="nom" placeholder="Nom" required>
-    <input name="email" type="email" placeholder="Email" required>
-    <input name="telephone" placeholder="Téléphone">
-    <button type="submit">Ajouter</button>
-</form>
-
-<div id="liste-commandes">
-    {% for commande in commandes %}
-    <div class="card">
-        <strong>{{ commande.reference }}</strong> — 
-        <button hx-delete="/commandes/{{ commande.id }}"
-                hx-target="closest .card"
-                hx-swap="outerHTML">
-            Supprimer
-        </button>
-    </div>
-    {% endfor %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Commandes</h1>
+    <button onclick="modal_commande.showModal()" class="btn btn-primary">
+        + Nouvelle commande
+    </button>
 </div>
+
+<!-- Modal formulaire ajout -->
+<dialog id="modal_commande" class="modal">
+    <div class="modal-box">
+        <h3 class="text-lg font-bold mb-4">Nouvelle commande</h3>
+        <form hx-post="/commandes/"
+              hx-target="#liste-commandes"
+              hx-swap="innerHTML"
+              hx-on::after-request="modal_commande.close()">
+
+            <div class="form-control mb-3">
+                <label class="label"><span class="label-text">Référence</span></label>
+                <input name="reference" type="text" placeholder="CMD-2024-001"
+                       class="input input-bordered" required>
+            </div>
+
+            <div class="form-control mb-3">
+                <label class="label"><span class="label-text">Client</span></label>
+                <select name="client_id" class="select select-bordered" required>
+                    <option value="" disabled selected>Choisir un client</option>
+                    {% for client in clients %}
+                    <option value="{{ client.id }}">{{ client.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-control mb-3">
+                <label class="label"><span class="label-text">Montant total (€)</span></label>
+                <input name="montant_total" type="number" step="0.01" min="0"
+                       placeholder="0.00" class="input input-bordered" required>
+            </div>
+
+            <div class="form-control mb-4">
+                <label class="label"><span class="label-text">Statut</span></label>
+                <select name="statut" class="select select-bordered">
+                    <option value="CREEE">Créée</option>
+                    <option value="CONFIRMEE">Confirmée</option>
+                    <option value="EXPEDIEE">Expédiée</option>
+                    <option value="LIVREE">Livrée</option>
+                    <option value="ANNULEE">Annulée</option>
+                </select>
+            </div>
+
+            <div class="modal-action">
+                <button type="button" onclick="modal_commande.close()"
+                        class="btn btn-ghost">Annuler</button>
+                <button type="submit" class="btn btn-primary">Créer</button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>Fermer</button>
+    </form>
+</dialog>
+
+<!-- Liste des commandes -->
+<div id="liste-commandes">
+    {% if commandes %}
+    <div class="overflow-x-auto">
+        <table class="table table-zebra bg-base-100 rounded-xl shadow">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Référence</th>
+                    <th>Client</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for commande in commandes %}
+                <tr id="commande-{{ commande.id }}">
+                    <td>{{ commande.id }}</td>
+                    <td class="font-mono font-medium">{{ commande.reference }}</td>
+                    <td>{{ commande.client.nom }}</td>
+                    <td>{{ "%.2f"|format(commande.montant_total) }} €</td>
+                    <td>
+                        {% if commande.statut.name == "CREEE" %}
+                            <span class="badge badge-ghost">{{ commande.statut.value }}</span>
+                        {% elif commande.statut.name == "CONFIRMEE" %}
+                            <span class="badge badge-info">{{ commande.statut.value }}</span>
+                        {% elif commande.statut.name == "EXPEDIEE" %}
+                            <span class="badge badge-warning">{{ commande.statut.value }}</span>
+                        {% elif commande.statut.name == "LIVREE" %}
+                            <span class="badge badge-success">{{ commande.statut.value }}</span>
+                        {% elif commande.statut.name == "ANNULEE" %}
+                            <span class="badge badge-error">{{ commande.statut.value }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ commande.date_commande.strftime("%d/%m/%Y %H:%M") }}</td>
+                    <td>
+                        <button class="btn btn-error btn-xs"
+                                hx-delete="/commandes/{{ commande.id }}"
+                                hx-target="#commande-{{ commande.id }}"
+                                hx-swap="outerHTML"
+                                hx-confirm="Supprimer la commande {{ commande.reference }} ?">
+                            Supprimer
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <span>Aucune commande pour l'instant. Créez-en une !</span>
+    </div>
+    {% endif %}
+</div>
+
 {% endblock %}

@@ -1,9 +1,20 @@
 {% extends "base.html" %}
 {% block title %}Accueil{% endblock %}
 {% block content %}
-<h1>Bienvenue</h1>
-<ul>
-    <li><a href="/clients">Gérer les clients</a></li>
-    <li><a href="/commandes">Gérer les commandes</a></li>
-</ul>
+
+<div class="hero min-h-[60vh]">
+    <div class="hero-content text-center">
+        <div>
+            <h1 class="text-5xl font-bold">Bienvenue</h1>
+            <p class="py-6 text-base-content/70">
+                Gérez vos clients et commandes simplement.
+            </p>
+            <div class="flex gap-4 justify-center">
+                <a href="/clients" class="btn btn-primary">Voir les clients</a>
+                <a href="/commandes" class="btn btn-secondary">Voir les commandes</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

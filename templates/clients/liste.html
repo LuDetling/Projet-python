@@ -1,27 +1,90 @@
 {% extends "base.html" %}
+{% block title %}Clients{% endblock %}
 {% block content %}
-<h1>Clients</h1>
 
-<!-- Formulaire HTMX : POST sans rechargement, remplace #liste-clients -->
-<form hx-post="/clients/"
-      hx-target="#liste-clients"
-      hx-swap="innerHTML">
-    <input name="nom" placeholder="Nom" required>
-    <input name="email" type="email" placeholder="Email" required>
-    <input name="telephone" placeholder="Téléphone">
-    <button type="submit">Ajouter</button>
-</form>
-
-<div id="liste-clients">
-    {% for client in clients %}
-    <div class="card">
-        <strong>{{ client.nom }}</strong> — {{ client.email }}
-        <button hx-delete="/clients/{{ client.id }}"
-                hx-target="closest .card"
-                hx-swap="outerHTML">
-            Supprimer
-        </button>
-    </div>
-    {% endfor %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Clients</h1>
+    <!-- Bouton qui ouvre le modal -->
+    <button onclick="modal_client.showModal()" class="btn btn-primary">
+        + Nouveau client
+    </button>
 </div>
+
+<!-- Modal formulaire ajout -->
+<dialog id="modal_client" class="modal">
+    <div class="modal-box">
+        <h3 class="text-lg font-bold mb-4">Nouveau client</h3>
+        <form hx-post="/clients/"
+              hx-target="#liste-clients"
+              hx-swap="innerHTML"
+              hx-on::after-request="modal_client.close()">
+            <div class="form-control mb-3">
+                <label class="label"><span class="label-text">Nom</span></label>
+                <input name="nom" type="text" placeholder="Jean Dupont"
+                       class="input input-bordered" required>
+            </div>
+            <div class="form-control mb-3">
+                <label class="label"><span class="label-text">Email</span></label>
+                <input name="email" type="email" placeholder="jean@exemple.fr"
+                       class="input input-bordered" required>
+            </div>
+            <div class="form-control mb-4">
+                <label class="label"><span class="label-text">Téléphone</span></label>
+                <input name="telephone" type="text" placeholder="06 00 00 00 00"
+                       class="input input-bordered">
+            </div>
+            <div class="modal-action">
+                <button type="button" onclick="modal_client.close()"
+                        class="btn btn-ghost">Annuler</button>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>Fermer</button>
+    </form>
+</dialog>
+
+<!-- Liste des clients -->
+<div id="liste-clients">
+    {% if clients %}
+    <div class="overflow-x-auto">
+        <table class="table table-zebra bg-base-100 rounded-xl shadow">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                <tr id="client-{{ client.id }}">
+                    <td>{{ client.id }}</td>
+                    <td class="font-medium">{{ client.nom }}</td>
+                    <td>{{ client.email }}</td>
+                    <td>{{ client.telephone or "—" }}</td>
+                    <td>
+                        <button class="btn btn-error btn-xs"
+                                hx-delete="/clients/{{ client.id }}"
+                                hx-target="#client-{{ client.id }}"
+                                hx-swap="outerHTML"
+                                hx-confirm="Supprimer {{ client.nom }} ?">
+                            Supprimer
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <span>Aucun client pour l'instant. Ajoutez-en un !</span>
+    </div>
+    {% endif %}
+</div>
+
 {% endblock %}
