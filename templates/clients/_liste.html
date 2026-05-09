@@ -1,7 +1,6 @@
 {% if clients %}
 <!-- Liste des clients -->
 <div id="liste-clients">
-    {% if clients %}
     <div class="overflow-x-auto">
         <table class="table table-zebra bg-base-100 rounded-xl shadow">
             <thead>
@@ -9,6 +8,7 @@
                     <th>#</th>
                     <th>Nom</th>
                     <th>Email</th>
+                    <th>Adresse</th>
                     <th>Téléphone</th>
                     <th>Actions</th>
                 </tr>
@@ -19,13 +19,12 @@
                     <td>{{ client.id }}</td>
                     <td class="font-medium">{{ client.nom }}</td>
                     <td>{{ client.email }}</td>
+                    <td>{{ client.adresse }}</td>
                     <td>{{ client.telephone or "—" }}</td>
                     <td>
-                        <button class="btn btn-error btn-xs"
-                                hx-delete="/clients/{{ client.id }}"
-                                hx-target="#client-{{ client.id }}"
-                                hx-swap="outerHTML"
-                                hx-confirm="Supprimer {{ client.nom }} ?">
+                        <button class="btn btn-error btn-xs" hx-delete="/clients/{{ client.id }}"
+                            hx-target="#client-{{ client.id }}" hx-swap="outerHTML"
+                            hx-confirm="Supprimer {{ client.nom }} ?">
                             Supprimer
                         </button>
                     </td>
@@ -34,9 +33,9 @@
             </tbody>
         </table>
     </div>
-    {% else %}
-    <div class="alert alert-info">
-        <span>Aucun client pour l'instant. Ajoutez-en un !</span>
-    </div>
-    {% endif %}
 </div>
+{% else %}
+<div class="alert alert-info">
+    <span>Aucun client pour l'instant. Ajoutez-en un !</span>
+</div>
+{% endif %}

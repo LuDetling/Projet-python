@@ -7,8 +7,8 @@ def get_all(db: Session):
 def get_by_id(db: Session, client_id: int):
     return db.query(Client).filter(Client.id == client_id).first()
 
-def create(db: Session, nom: str, email: str, telephone: str = None):
-    client = Client(nom=nom, email=email, telephone=telephone)
+def create(db: Session, nom: str, email: str, telephone: str = None, adresse: str = None):
+    client = Client(nom=nom, email=email, telephone=telephone, adresse=adresse)
     db.add(client)      # prépare l'insertion
     db.commit()         # envoie à la base
     db.refresh(client)  # recharge l'objet avec l'id généré

@@ -14,28 +14,27 @@
 <dialog id="modal_client" class="modal">
     <div class="modal-box">
         <h3 class="text-lg font-bold mb-4">Nouveau client</h3>
-        <form hx-post="/clients/"
-              hx-target="#liste-clients"
-              hx-swap="innerHTML"
-              hx-on::after-request="if(event.detail.successful) modal_commande.close()">
+        <form hx-post="/clients/" hx-target="#liste-clients" hx-swap="innerHTML"
+            hx-on::after-request="if(event.detail.successful) modal_client.close()">
             <div class="form-control mb-3">
                 <label class="label"><span class="label-text">Nom</span></label>
-                <input name="nom" type="text" placeholder="Jean Dupont"
-                       class="input input-bordered" required>
+                <input name="nom" type="text" placeholder="Jean Dupont" class="input input-bordered" required>
             </div>
             <div class="form-control mb-3">
                 <label class="label"><span class="label-text">Email</span></label>
-                <input name="email" type="email" placeholder="jean@exemple.fr"
-                       class="input input-bordered" required>
+                <input name="email" type="email" placeholder="jean@exemple.fr" class="input input-bordered" required>
             </div>
             <div class="form-control mb-4">
                 <label class="label"><span class="label-text">Téléphone</span></label>
-                <input name="telephone" type="text" placeholder="06 00 00 00 00"
-                       class="input input-bordered">
+                <input name="telephone" type="text" placeholder="06 00 00 00 00" class="input input-bordered">
+            </div>
+            <div class="form-control mb-4">
+                <label class="label"><span class="label-text">Adresse</span></label>
+                <input name="adresse" type="text" placeholder="51 avenue de la république, 37100, Tours"
+                    class="input input-bordered">
             </div>
             <div class="modal-action">
-                <button type="button" onclick="modal_client.close()"
-                        class="btn btn-ghost">Annuler</button>
+                <button type="button" onclick="modal_client.close()" class="btn btn-ghost">Annuler</button>
                 <button type="submit" class="btn btn-primary">Ajouter</button>
             </div>
         </form>
@@ -55,6 +54,7 @@
                     <th>#</th>
                     <th>Nom</th>
                     <th>Email</th>
+                    <th>Adresse</th>
                     <th>Téléphone</th>
                     <th>Actions</th>
                 </tr>
@@ -65,13 +65,12 @@
                     <td>{{ client.id }}</td>
                     <td class="font-medium">{{ client.nom }}</td>
                     <td>{{ client.email }}</td>
+                    <td>{{ client.adresse }}</td>
                     <td>{{ client.telephone or "—" }}</td>
                     <td>
-                        <button class="btn btn-error btn-xs"
-                                hx-delete="/clients/{{ client.id }}"
-                                hx-target="#client-{{ client.id }}"
-                                hx-swap="outerHTML"
-                                hx-confirm="Supprimer {{ client.nom }} ?">
+                        <button class="btn btn-error btn-xs" hx-delete="/clients/{{ client.id }}"
+                            hx-target="#client-{{ client.id }}" hx-swap="outerHTML"
+                            hx-confirm="Supprimer {{ client.nom }} ?">
                             Supprimer
                         </button>
                     </td>

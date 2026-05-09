@@ -23,9 +23,10 @@ def creer_client(
     nom: str = Form(...),
     email: str = Form(...),
     telephone: str = Form(""),
+    adresse: str = Form(...),
     db: Session = Depends(get_db)
 ):
-    client_service.create(db, nom=nom, email=email, telephone=telephone)
+    client_service.create(db, nom=nom, email=email, telephone=telephone, adresse=adresse)
     clients = client_service.get_all(db)
     return templates.TemplateResponse(
         request=request,
