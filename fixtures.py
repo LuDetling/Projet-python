@@ -4,8 +4,6 @@ from database import Base ,engine
 from models.client import Client
 from models.commande import Commande, StatutCommande
 from services.commande_service import generer_ref
-from database import get_db
-
 
 with Session(engine) as session:
     try:
@@ -15,8 +13,7 @@ with Session(engine) as session:
             telephone='0668372876',
             adresse='51 avenue de la république, 37100, Tours'
         )
-        db: Session = Depends(get_db)
-        reference = generer_ref(db)
+        reference = generer_ref(session)
         
         nouvelle_commande = Commande(
             reference=reference,

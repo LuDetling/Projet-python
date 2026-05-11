@@ -1,3 +1,6 @@
+FastAPI
+Pour créer les routes entre les templates de HTMX et la bdd
+
 sqlalchemy
 ORM pour la base de donnée y a juste a créer les class puis avec la fonction create_engine les tables se créent 
 

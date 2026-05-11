@@ -10,7 +10,7 @@
     </button>
 </div>
 
-<!-- Modal formulaire ajout -->
+<!-- Modal formulaire ajout client -->
 <dialog id="modal_client" class="modal">
     <div class="modal-box">
         <h3 class="text-lg font-bold mb-4">Nouveau client</h3>
@@ -44,6 +44,18 @@
     </form>
 </dialog>
 
+<!-- Modal modification (contenu chargé dynamiquement par HTMX) -->
+<dialog id="modal_modifier_client" class="modal">
+    <div class="modal-box">
+        <div id="modal-modifier-contenu">
+            <!-- HTMX injecte le formulaire ici -->
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>Fermer</button>
+    </form>
+</dialog>
+
 <!-- Liste des clients -->
 <div id="liste-clients">
     {% if clients %}
@@ -68,6 +80,11 @@
                     <td>{{ client.adresse }}</td>
                     <td>{{ client.telephone or "—" }}</td>
                     <td>
+                        <!-- <button class="btn btn-warning btn-xs" hx-get="/clients/{{ client.id }}/modifier"
+                            hx-target="#modal-modifier-contenu" hx-swap="innerHTML"
+                            onclick="modal_modifier_client.showModal()">
+                            Modifier
+                        </button> -->
                         <button class="btn btn-error btn-xs" hx-delete="/clients/{{ client.id }}"
                             hx-target="#client-{{ client.id }}" hx-swap="outerHTML"
                             hx-confirm="Supprimer {{ client.nom }} ?">

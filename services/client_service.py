@@ -14,6 +14,20 @@ def create(db: Session, nom: str, email: str, telephone: str = None, adresse: st
     db.refresh(client)  # recharge l'objet avec l'id généré
     return client
 
+def update(db: Session, client_id: int, nom: str, email: str, telephone: str = None, adresse: str = None):
+    client = get_by_id(db, client_id)
+    if not client:
+        return
+    
+    client.nom = nom
+    client.email = email
+    client.telephone = telephone
+    client.adresse = adresse
+    
+    db.commit()
+    db.refresh(client)
+    return client
+
 def delete(db: Session, client_id: int):
     client = get_by_id(db, client_id)
     if client:
