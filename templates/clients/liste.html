@@ -80,15 +80,10 @@
                     <td>{{ client.adresse }}</td>
                     <td>{{ client.telephone or "—" }}</td>
                     <td>
-                        <!-- <button class="btn btn-warning btn-xs" hx-get="/clients/{{ client.id }}/modifier"
+                        <button class="btn btn-warning btn-xs" hx-get="/clients/{{ client.id }}/modifier"
                             hx-target="#modal-modifier-contenu" hx-swap="innerHTML"
                             onclick="modal_modifier_client.showModal()">
                             Modifier
-                        </button> -->
-                        <button class="btn btn-error btn-xs" hx-delete="/clients/{{ client.id }}"
-                            hx-target="#client-{{ client.id }}" hx-swap="outerHTML"
-                            hx-confirm="Supprimer {{ client.nom }} ?">
-                            Supprimer
                         </button>
                     </td>
                 </tr>
